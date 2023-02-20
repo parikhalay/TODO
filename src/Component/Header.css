@@ -1,0 +1,16 @@
+.header{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    color: black;
+    text-align: center;
+}
+
+.header-title{
+    padding-top: 10px;
+}
+
+.css-hyum1k-MuiToolbar-root{
+    background-color: #395144;
+}
