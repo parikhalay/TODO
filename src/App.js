@@ -4,8 +4,7 @@ import TextField from '@mui/material/TextField';
 import './App.css';
 import Button from '@mui/material/Button';
 import TodoCard from './Component/TodoCard/TodoCard';
-import Footer from './Component/TodoCard/Footer';
-import Header from './Component/Header';
+import Header from './Component/TodoCard/Header';
 // import data from './Utils/Dataset'
 
 function App() {
@@ -33,13 +32,15 @@ function App() {
         id: Math.random(),
         title: newTitle,
         description: newDescription,
+        color: "",
         isCompleted: false,
         isDeleted: false
     }
     toDos.push(newTodo)
     console.log(toDos);
     setToDos([...toDos])
-
+    setNewTitle(null)
+    setNewDescription(null)
     localStorage.setItem("data",JSON.stringify(toDos)) //Updating Local Storage
   }
 
@@ -48,6 +49,13 @@ function App() {
     todo.isCompleted = true
     setToDos([...toDos]) //changing state
     localStorage.setItem("data",JSON.stringify(toDos))
+  }
+
+  const UpdateColor =(id,color) =>{
+    const todo = toDos.find(e => e.id === id); 
+    todo.color = color 
+    setToDos([...toDos]) 
+    localStorage.setItem("data", JSON.stringify(toDos)) //Updating Local Storage
   }
   
   const deleteHandler = (id) =>{
@@ -70,11 +78,11 @@ return (
         noValidate
         autoComplete="off"
         >
-          <TextField id="outlined-basic" label="Enter note" variant="outlined" onChange={(e) => {setNewTitle(e.target.value)}  } />
-          <TextField id="outlined-basic" label="Enter Description" variant="outlined" onChange={(e) => {setNewDescription(e.target.value)}  } />
+          <TextField id="outlined-basic" label="Enter note" value={newTitle || ""} variant="outlined" onChange={(e) => {setNewTitle(e.target.value)}  } />
+          <TextField id="outlined-basic" label="Enter Description" value={newDescription || ""} variant="outlined" onChange={(e) => {setNewDescription(e.target.value)}  } />
           
         </Box>
-        <Button variant="outlined" onClick={() => {addHandler(); setNewTitle("")}}>Add Note</Button>
+        <Button variant="outlined" onClick={addHandler}>Add Note</Button>
       </div>
       <div className='output-container'>
         <div className='card-container'>
@@ -83,7 +91,7 @@ return (
             {
               toDos?.map((e) => {
               if(!e.isCompleted && !e.isDeleted){
-               return <TodoCard key = {e.id} description={e.description} title = {e.title} id={e.id} complete = {completeHandler} delete = {deleteHandler}/>
+               return <TodoCard key = {e.id} description={e.description} title = {e.title} id={e.id} complete = {completeHandler} updateColor={UpdateColor} color={e.color} delete = {deleteHandler}/>
               }
               return <></>
               
@@ -95,14 +103,13 @@ return (
           <div className='card-list'>
           {toDos?.map((e) => {
               if(e.isCompleted && !e.isDeleted){
-              return <TodoCard key={e.id} title = {e.title} description={e.description} id={e.id} isCompleted = {e.isCompleted} delete = {deleteHandler}/>
+              return <TodoCard key={e.id} title = {e.title} description={e.description} id={e.id} isCompleted = {e.isCompleted} updateColor={UpdateColor} color={e.color} delete = {deleteHandler}/>
               }
               return <></>
             })}
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
